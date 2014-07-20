@@ -5,6 +5,7 @@ BTC:
      rpchost: "localhost"
      rpcport: "8332"
      walletpass: "wallet_password"
+     ssl: false
   
   test:
     <<: *base
@@ -15,7 +16,7 @@ BTC:
      rpchost: "localhost"
      rpcport: "8332"
      walletpass: "wallet_password"
-
+     ssl: false
 
 BC:
   development: &base
@@ -25,7 +26,8 @@ BC:
      rpcport: "15715"
      walletpass: "wallet_password"
      profitaddress: "Bprofit..."
-  
+     ssl: false  
+
   test:
     <<: *base
   
@@ -36,3 +38,4 @@ BC:
      rpcport: "15715"
      walletpass: "wallet_password"
      profitaddress: "Bprofit..."
+     ssl: false

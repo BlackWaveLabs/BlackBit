@@ -6,7 +6,7 @@ require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
 # Ruby-wallet
-require "coin"
+require "coind"
 
 Bundler.require(*Rails.groups)
 

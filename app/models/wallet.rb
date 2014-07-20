@@ -181,10 +181,10 @@ class Wallet
 
   protected
     def api
-      wallet ||= RubyWallet.connect(username: Coin.config(self.iso_code)[:user],
-                                    password: Coin.config(self.iso_code)[:pass],
-                                    host:     Coin.config(self.iso_code)[:host],
-                                    port:     Coin.config(self.iso_code)[:port],
+      wallet ||= RubyWallet.connect(username: Coin.config(self.iso_code)[:rpcuser],
+                                    password: Coin.config(self.iso_code)[:rpcpass],
+                                    host:     Coin.config(self.iso_code)[:rpchost],
+                                    port:     Coin.config(self.iso_code)[:rpcport],
                                     ssl:      Coin.config(self.iso_code)[:ssl])
     end
 end
