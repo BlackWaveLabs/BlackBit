@@ -24,8 +24,11 @@ Credits
 Blackwave Labs - blackwavelabs.com
 
 If you use this software you can donate to the following addresses:
+
 Blackcoin: B98Z9DEnTtbYMWZF33iPKjF2LqQa1QUbvq
+
 Bitcoin:   1Q9penuDUUbkt5eDtwgHfZs5A26PHZGuy3
+
 
 License
 -------
