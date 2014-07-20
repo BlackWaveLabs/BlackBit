@@ -5,6 +5,7 @@ require "action_mailer/railtie"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
+# Ruby-wallet
 require "coin"
 
 Bundler.require(*Rails.groups)
@@ -12,6 +13,5 @@ Bundler.require(*Rails.groups)
 module Blackbit
   class Application < Rails::Application
     config.i18n.default_locale = :en
-    config.autoload_paths += %W(#{config.root}/lib)
   end
 end

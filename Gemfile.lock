@@ -136,8 +136,6 @@ GEM
       monetize (~> 0.3.0)
       money (~> 6.1.1)
       railties (>= 3.0)
-    mongoid_token (1.0.0)
-      activesupport (>= 3.0)
     moped (2.0.0)
       bson (~> 2.2)
       connection_pool (~> 2.0)
@@ -247,7 +245,6 @@ DEPENDENCIES
   jquery-rails
   money-rails
   mongoid!
-  mongoid_token
   puma
   quiet_assets
   rails (= 4.1.2)

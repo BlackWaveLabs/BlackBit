@@ -9,7 +9,6 @@ gem 'bson_ext'
 
 gem 'ruby-wallet', git: 'https://github.com/ruby-wallet/ruby-wallet.git'
 gem 'state_machine', git: 'https://github.com/seuros/state_machine.git'
-gem 'mongoid_token'
 gem 'money-rails'
 
 gem 'sidekiq', git: 'https://github.com/mperham/sidekiq.git', branch: '2-x'
