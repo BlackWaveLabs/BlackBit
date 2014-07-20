@@ -1,0 +1,11 @@
+.well.margint20.bc-well
+  %p.conversion-text
+    %i #{Site.settings.blackcoin_trade_price.round(5)} BC = 1 BTC
+  
+  = simple_form_for(@trade) do |f|  
+    .form-inputs
+      = f.input :bitcoin_amount, label: "Bitcoin Amount", required: false, placeholder: '0.00', input_html: {class: 'form-input-class'}, label_html: {class: 'form-label-class'}, error_html: {class: 'error-helptext'}
+      = f.input :bitcoin_address, label: "Bitcoin Address", required: false, placeholder: '1Q9p...', input_html: {class: 'form-input-class'}, label_html: {class: 'form-label-class'}, error_html: {class: 'error-helptext'}
+  
+    .form-actions.margint20
+      = f.button :submit, 'Send Bitcoins', class: 'form-button-class'

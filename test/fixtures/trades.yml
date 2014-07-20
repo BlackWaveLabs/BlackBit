@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  paid: 
+  blackcoin_amount: 
+  blackcoin_address: MyString
+  blackcoin_confirmations: 1
+  bitcoin_amount: 
+  bitcoin_address: MyString
+  bitcoin_confirmations: 1
+
+two:
+  paid: 
+  blackcoin_amount: 
+  blackcoin_address: MyString
+  blackcoin_confirmations: 1
+  bitcoin_amount: 
+  bitcoin_address: MyString
+  bitcoin_confirmations: 1

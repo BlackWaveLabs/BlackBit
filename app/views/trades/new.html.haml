@@ -1,0 +1,9 @@
+.row-fluid.margint20
+  .col-md-6.col-md-offset-3
+    %h1 BlackBit
+    %p.margint25 BlackBit is a service which accepts Blackcoin payment for Bitcoin transactions. Allowing you to pay any companies that accept Bitcoin quickly using your Blackcoins. Remember to include the 0.0002 mining fee required when sending bitcoins to the expected total.
+    %p.margint25 Blackbit is in beta and currently only allows bitcoin transfers up to 1 bitcoin, with a small #{Site.settings.margin} percent fee that covers the trade costs. 
+    %p.margint25 After submitting the destination bitcoin address and the desired amount to send, you have 2 minutes to complete the transaction.
+  
+    
+    = render 'trades/form'

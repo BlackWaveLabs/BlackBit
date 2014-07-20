@@ -1,0 +1,38 @@
+BTC:
+  development: &base
+     rpcuser: "bitcoinrpc"
+     rpcpass: "password"
+     rpchost: "localhost"
+     rpcport: "8332"
+     walletpass: "wallet_password"
+  
+  test:
+    <<: *base
+  
+  production:
+     rpcuser: "bitcoinrpc"
+     rpcpass: "password"
+     rpchost: "localhost"
+     rpcport: "8332"
+     walletpass: "wallet_password"
+
+
+BC:
+  development: &base
+     rpcuser: "blackcoinrpc"
+     rpcpass: "password"
+     rpchost: "localhost"
+     rpcport: "15715"
+     walletpass: "wallet_password"
+     profitaddress: "Bprofit..."
+  
+  test:
+    <<: *base
+  
+  production:
+     rpcuser: "blackcoinrpc"
+     rpcpass: "password"
+     rpchost: "localhost"
+     rpcport: "15715"
+     walletpass: "wallet_password"
+     profitaddress: "Bprofit..."

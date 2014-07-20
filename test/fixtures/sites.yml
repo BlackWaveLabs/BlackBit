@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  blackcoin_price: 
+  online: 
+  wallet_empty: 
+
+two:
+  blackcoin_price: 
+  online: 
+  wallet_empty: 

@@ -1,0 +1,37 @@
+# Tell Mongoid which environment this configuration is for.
+production:
+  # This starts the session configuration settings. You may have as
+  # many sessions as you like, but you must have at least 1 named
+  # 'default'.
+  sessions:
+    # Define the default session.
+    default:
+      # A session can have any number of hosts. Usually 1 for a single
+      # server setup, and at least 3 for a replica set. Hosts must be
+      # an array of host:port pairs. This session is single server.
+      hosts:
+        - localhost:27017
+      database: blackbit_production
+
+development:
+  sessions:
+    default:
+      database: blackbit_development
+      hosts:
+        - localhost:27017
+      options:
+  options:
+
+
+test:
+  sessions:
+    default:
+      database: blackbit_test
+      hosts:
+        - localhost:27017
+      options:
+        read: primary
+        # In the test environment we lower the retries and retry interval to
+        # low amounts for fast failures.
+        max_retries: 1
+        retry_interval: 0

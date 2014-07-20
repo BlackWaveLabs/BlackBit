@@ -1,0 +1,62 @@
+.row-fluid.margint20
+  .col-md-7
+    .row-fluid
+      -if @trade.status == "completed"
+        .col-md-12
+          %p #{@trade.bitcoin_amount - 0.0002} BTC has been sent to #{@trade.bitcoin_address}
+          .alert.alert-breakout TXID #{@trade.bitcoin_txid}
+
+      -elsif @trade.status == "refunded"
+        .col-md-12
+          %p #{@trade.blackcoin_amount - @trade.blackcoin_margin} BC has been sent to #{@trade.refund_address}
+          .alert.alert-breakout TXID #{@trade.refund_txid}
+
+      -else
+        .col-md-12
+          %p We will send #{@trade.bitcoin_amount - 0.0002} BTC to #{@trade.bitcoin_address} after you send
+          .bc-price
+            = @trade.blackcoin_amount.to_s + " BC"
+    
+        .row-fluid 
+          .col-md-12
+            %p to the following blackcoin address
+            
+            .bc-address
+              = @trade.blackcoin_address
+
+            %p{style: 'color:#999;margin-top:25px;font-style:italic;font-size:12px;'} Save the URL #{link_to "http://bcbit.co/trades/" + @trade.id.to_s, trade_path(@trade)} to check the status of your trade.
+
+
+  .col-md-4.col-md-offset-1.tar
+    -if @trade.status == "pending" or @trade.status == "processing" or @trade.status == "failed"
+      %h3.white
+        %b Timer
+      -if (@trade.initiated_at + 2.minutes) < Time.now
+        %h4.white Time ended
+      -else
+        %h4.white= distance_of_time_in_words_to_now(@trade.initiated_at + 2.minutes) + " remaining"
+        
+    %h3.white
+      %b Status
+    %h4.white= @trade.status.humanize
+    
+    -if @trade.status == "pending" or @trade.status == "processing" or @trade.status == "failed"
+      %h3.white
+        %b Balance
+      %h4.white= @trade.account.unconfirmed_balance.to_s + " BC"
+    
+        
+
+-if @trade.status == "failed"
+  .row-fluid.margint20
+    .col-md-12
+      .well.margint20.bc-well
+        %p.conversion-text
+          %i You failed to send enough coins or missed the deadline.
+        
+        = simple_form_for(@trade, url: trade_refund_path(@trade)) do |f|  
+          .form-inputs
+            = f.input :refund_address, label: "Blackcoin Refund Address", required: false, placeholder: 'B98Z...', input_html: {class: 'form-input-class'}, label_html: {class: 'form-label-class'}, error_html: {class: 'error-helptext'}
+        
+          .form-actions.margint20
+            = f.button :submit, 'Request refund', class: 'form-button-class'

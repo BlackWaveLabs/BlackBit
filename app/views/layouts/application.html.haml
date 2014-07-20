@@ -1,0 +1,45 @@
+!!!
+%html
+  %head
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1.0"}
+    %title= content_for?(:title) ? yield(:title) : 'Blackbit'
+    %meta{:name => "description", :content => "#{content_for?(:description) ? yield(:description) : 'Blackbit'}"}
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    %main{:role => "main"}
+      .row-fluid.margint20
+        .col-md-8.col-md-offset-2
+          = render 'layouts/messages'
+          = yield
+    .row-fluid.footer
+    
+      .col-md-1.col-md-offset-2.margint20
+        =link_to root_path do
+          %span.glyphicon.glyphicon-arrow-right.footer-icons
+        %h5 BlackBit
+      .col-md-1.margint20
+        =link_to api_path do
+          %span.glyphicon.glyphicon-wrench.footer-icons
+        %h5 API
+      .col-md-1.margint20
+        =link_to faq_path do
+          %span.glyphicon.glyphicon-question-sign.footer-icons
+        %h5 FAQ
+      .col-md-1.margint20
+        =link_to "https://github.com/blackwavelabs/blackbit" do
+          %span.glyphicon.glyphicon-wrench.footer-icons
+        %h5 Source
+
+      .col-md-1.margint20
+        =link_to 'mailto:admin@blackwavelabs.com' do
+          %span.glyphicon.glyphicon-envelope.footer-icons
+        %h5 Contact Us
+  
+      .col-md-2.col-md-offset-2
+        .about.margint25
+          %p.gp BlackBit is a service by
+          %h4= link_to "Blackwave Labs", "http://blackwavelabs.com", style: "color:#000;"
+        
+            
