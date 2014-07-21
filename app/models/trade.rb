@@ -96,8 +96,7 @@ class Trade
   end
 
   def received_transaction
-    self.check_timer
-    if self.status == "pending"
+    if self.status == "pending" and (self.initiated_at + Site.settings.minutes_to_complete.minutes) > Time.now
       if self.account.transaction.confirmations >= self.account.wallet.confirmations
         if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount  
           self.coins_received
@@ -111,8 +110,10 @@ class Trade
           self.not_enough_coins
         end
       end
-    elsif self.status == "cancelled" and self.account.unconfirmed_balance > 0
+    elsif self.status == "cancelled" and self.account.unconfirmed_balance > 0 and (self.initiated_at + Site.settings.minutes_to_complete.minutes) > Time.now
       self.transfer_late
+    elsif (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
+      self.time_ran_out
     end
   end
 
