@@ -3,7 +3,7 @@ class SiteWorker
   include Sidetiq::Schedulable
   
   sidekiq_options queue: "default", unique: true
-  recurrence { minutely }
+  recurrence { hourly }
   
   def perform(last_occurrence = nil, current_occurrence = nil)
     # Check for new transactions

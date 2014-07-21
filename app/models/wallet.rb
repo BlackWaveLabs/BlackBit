@@ -149,11 +149,11 @@ class Wallet
         transaction = self.transactions.where(txid: txn.id).first
         if transaction
           transaction.update_attributes(confirmations: txn.confirmations)
+          if transaction.trade_id
+            @trade.received_transaction 
+          end
           if transaction.status == "pending" and transaction.confirmations >= self.confirmations
             transaction.confirm
-            if transaction.trade_id
-              @trade.received_transaction 
-            end
           end
         end
       end

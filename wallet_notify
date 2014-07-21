@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'sidekiq'
+
+Sidekiq::Client.push('queue' => 'default', 'class' => 'SiteWorker', 'args' => [])
