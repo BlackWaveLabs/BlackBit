@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/ruby-wallet/ruby-wallet.git
-  revision: bbde18fcea10856b2817e21ff38fbf9b7152445a
+  revision: 2c0088fb239331b1e28eca116c0e32f3cb6fa790
   specs:
     ruby-wallet (0.2.1)
       rest-client (~> 1.6.3)

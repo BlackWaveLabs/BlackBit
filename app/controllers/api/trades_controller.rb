@@ -12,7 +12,7 @@ module Api
       
       respond_to do |format|
         if @trade.bitcoin_amount.to_f > Site.settings.bank_balance.to_f
-          format.json { render status: 401, json: {error: "Bitcoin bank running low. Try again soon."}}
+          format.json { render status: 400, json: {error: "Bitcoin bank running low. Try again soon."}}
         elsif @trade
           trade_summary = {
             'id' => @trade.id.to_s,
@@ -24,13 +24,14 @@ module Api
   
           format.json { render status: 200, json: trade_summary }
         else
-          format.json { render status: 401, json: {error: "Unable to issue trade."}}
+          format.json { render status: 400, json: {error: "Unable to issue trade."}}
         end
       end
     end
 
     def check
       @trade = Trade.find(params[:id])
+      @trade.check_timer
       respond_to do |format|
         if @trade
           trade_summary = {
@@ -43,7 +44,7 @@ module Api
 
           format.json { render status: 200, json: trade_summary }
         else
-          format.json { render status: 401, json: {error: "No trade found."}}
+          format.json { render status: 400, json: {error: "No trade found."}}
         end
       end
     end

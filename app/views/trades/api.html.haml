@@ -3,7 +3,7 @@
     %h1 BlackBit API
     %p.margint25 BlackBit is a service which accepts Blackcoin payment for Bitcoin transactions. Allowing you to pay any companies that accept Bitcoin quickly using your Blackcoins. Remember to include the 0.0002 mining fee required when sending bitcoins to the expected total.
     %p.margint25 Blackbit is in beta and currently only allows bitcoin transfers up to 1 bitcoin, with a small #{Site.settings.margin} percent fee that covers mining fees the trade costs.
-    %p.margint25 After submitting the destination bitcoin address and the desired amount to send, you have 2 minutes to complete the transaction.
+    %p.margint25 After submitting the destination bitcoin address and the desired amount to send, you have #{Site.settings.minutes_to_complete} minutes to complete the transaction.
     
     %p These features can be built into any application, and we are considering issuing a custom fork of the blackcoin wallet that allows seemless access to our service. 
 

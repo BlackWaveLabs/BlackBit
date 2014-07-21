@@ -24,7 +24,7 @@
             .bc-address
               = @trade.blackcoin_address
 
-            %p{style: 'color:#999;margin-top:25px;font-style:italic;font-size:12px;'} Save the URL #{link_to "http://bcbit.co/trades/" + @trade.id.to_s, trade_path(@trade)} to check the status of your trade.
+            %p{style: 'color:#999;margin-top:25px;font-style:italic;font-size:12px;'} Save the URL #{link_to "http://bcbit.co/trades/" + @trade.id.to_s, trade_path(@trade), style: 'color:#FD7'} to check the status of your trade.
 
 
   .col-md-4.col-md-offset-1.tar

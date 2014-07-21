@@ -66,8 +66,15 @@ class Trade
   end
   
   def check_timer
-    if (self.initiated_at + 2.minutes) < Time.now
-      self.time_ran_out
+    if (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
+      if self.account.unconfirmed_balance > 0
+        self.received_transaction
+      else
+        self.time_ran_out
+      end
+    end
+    if self.status == "cancelled" and self.account.unconfirmed_balance > 0
+      self.transfer_late
     end
   end
 

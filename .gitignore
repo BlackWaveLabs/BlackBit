@@ -9,7 +9,7 @@
 # Corrections? Improvements? Create a GitHub issue:
 # http://github.com/RailsApps/rails-composer/issues
 #----------------------------------------------------------------------------
-
+dump.rdb
 # bundler state
 /.bundle
 /vendor/bundle/

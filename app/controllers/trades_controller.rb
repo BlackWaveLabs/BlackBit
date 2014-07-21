@@ -1,6 +1,10 @@
 class TradesController < ApplicationController
   before_action :set_trade, only: [:show, :refund]
 
+  def show
+    @trade.check_timer
+  end
+
   def new
     @trade = Trade.new
   end

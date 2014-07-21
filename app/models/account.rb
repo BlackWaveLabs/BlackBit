@@ -12,13 +12,15 @@ class Account
   field :trade_id,              type: String
   field :address,               type: String
 
+  field :profit_failed,         type: Boolean, default: false
+
   belongs_to :wallet
 
   belongs_to :trade
   embeds_many :transactions
 
-  validates_uniqueness_of :name, message: "Unique name required."
-  validates_presence_of :wallet_id, message: "Wallet ID required."
+  validates_uniqueness_of :name,     message: "Unique name required."
+  validates_presence_of :wallet_id,  message: "Wallet ID required."
 
   def trade
     Trade.find(self.trade_id)
@@ -50,7 +52,15 @@ class Account
   end
 
   def payout_profit
-    self.wallet_account.send_amount(self.trade.blackcoin_amount.to_f, to: BlackcoinConfig.config[:profitaddress])
+    begin
+      p self.wallet_account.send_amount((self.confirmed_balance.to_f - 0.02), to: Coin.config("BC")[:profitaddress])
+      p "Payout SUCCESS #{self.confirmed_balance.to_f} to #{Coin.config("BC")[:profitaddress]}."
+      return true
+    rescue
+      p "Payout failed #{self.confirmed_balance.to_f} to #{Coin.config("BC")[:profitaddress]}."
+      self.update_attributes(profit_failed: true)
+      return false
+    end
   end
 
   def wallet_account

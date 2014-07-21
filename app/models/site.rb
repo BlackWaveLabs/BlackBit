@@ -5,6 +5,7 @@ class Site
   field :margin,                       type: Float,        default: 0.45
   field :calculated_margin,            type: BigDecimal
   field :online,                       type: Boolean,      default: true
+  field :minutes_to_complete,          type: Integer,      default: 3
   
   validate :there_can_only_be_one, on: :create
   def there_can_only_be_one
@@ -26,8 +27,9 @@ class Site
   
   def payout_site_profit
     Trade.where(status: "completed", profit_paid: false).each do |t|
-      t.account.payout_profit
-      t.update_attributes(profit_paid: true)
+      if t.account.payout_profit
+        t.update_attributes(profit_paid: true)
+      end
     end
   end
 

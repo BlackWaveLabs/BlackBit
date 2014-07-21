@@ -179,7 +179,7 @@ class Wallet
     self.api.accounts.new(account_name)
   end
 
-  protected
+  #protected
     def api
       wallet ||= RubyWallet.connect(username: Coin.config(self.iso_code)[:rpcuser],
                                     password: Coin.config(self.iso_code)[:rpcpass],

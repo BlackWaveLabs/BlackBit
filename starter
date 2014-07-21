@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+system "bundle exec rails s -e production -d"
+
+running_sidekiq_list = `ps aux | grep sidekiq`
+unless running_sidekiq_list.include?("sidekiq 2.17.7")
+  system "bundle exec sidekiq -L log/sidekiq.log -q default -e production -d"
+end
