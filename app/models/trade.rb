@@ -1,5 +1,7 @@
 class Trade
   include Mongoid::Document
+  include Mongoid::Timestamps
+
   field :paid,                  type: Boolean, default: false
   field :initiated_at,          type: Time
   field :blackcoin_amount,      type: BigDecimal
@@ -21,6 +23,23 @@ class Trade
   validate :check_format, on: :create
   validate :check_duplicate_ip, on: :create
   validate :bank_check, on: :create
+
+  after_create :calculate_rates
+  def calculate_rates
+    Site.settings.fetch_prices
+    self.blackcoin_amount = (self.bitcoin_amount * Site.settings.blackcoin_trade_price.to_money)
+    self.blackcoin_margin = (self.bitcoin_amount * Site.settings.calculated_margin.to_money)
+    
+    # create new account
+    w = Wallet.where(iso_code: "BC").first
+    bc = w.new_account("bcbit-" + self.id)
+    trade_account = Account.create(name: bc.name, address: bc.addresses.first, trade_id: self.id, wallet_id: w.id, iso_code: w.iso_code)
+
+    self.account_id = trade_account.id
+    self.blackcoin_address = trade_account.address
+    
+    self.save
+  end
   
   def issue_refund
     if !self.refund_address.nil? and self.status == "failed"
@@ -51,14 +70,6 @@ class Trade
     Account.where(name: "bcbit-#{self.id}").first
   end
    
-  def transactions
-    self.account.transactions
-  end
-  
-  def transaction
-    self.account.transactions.first
-  end
-
   def bank_check
     if self.bitcoin_amount.to_f > Site.settings.bank_balance.to_f
       errors.add(:bitcoin_amount, "Bitcoin bank running low. Try again soon.")
@@ -66,33 +77,13 @@ class Trade
   end
   
   def check_status
-    if (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
-      if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount and self.account.transaction.created_at > (self.initiated_at + Site.settings.minutes_to_complete.minutes)
-        self.complete_trade
-      else
-        self.time_ran_out
-      end
+    self.calculate_rates if self.account.nil?
+    if (self.created_at + Site.settings.minutes_to_complete.minutes) < Time.now
+      self.time_ran_out
     end
     if self.status == "cancelled" and self.account.unconfirmed_balance > 0
       self.transfer_late
     end
-  end
-
-  after_create :calculate_rates
-  def calculate_rates
-    Site.settings.fetch_prices
-    self.blackcoin_amount = (self.bitcoin_amount * Site.settings.blackcoin_trade_price.to_money)
-    self.blackcoin_margin = (self.bitcoin_amount * Site.settings.calculated_margin.to_money)
-    
-    # create new account
-    w = Wallet.where(iso_code: "BC").first
-    bc = w.new_account("bcbit-" + self.id)
-    trade_account = Account.create(name: bc.name, address: bc.addresses.first, trade_id: self.id, wallet_id: w.id, iso_code: w.iso_code)
-
-    self.account_id = trade_account.id
-    self.blackcoin_address = trade_account.address
-    
-    self.save
   end
 
   def received_transaction
@@ -101,27 +92,21 @@ class Trade
     elsif self.status == "cancelled" and self.account.unconfirmed_balance > 0
       self.transfer_late
     elsif (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
-      if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount and self.account.transaction.created_at > (self.initiated_at + Site.settings.minutes_to_complete.minutes)
-        self.complete_trade
-      else
-        self.time_ran_out
-      end
+      self.time_ran_out
     end
   end
 
   def complete_trade
-    if self.account.transaction.confirmations >= self.account.wallet.confirmations
-      if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount
-        self.coins_received
-        Wallet.bitcoin.send_to(self)
-        if self.bitcoin_txid
-          self.coins_sent
-        else
-          self.transfer_failed
-        end
-      elsif  self.account.unconfirmed_balance.to_f < self.blackcoin_amount
-        self.not_enough_coins
+    if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount
+      self.coins_received
+      Wallet.bitcoin.send_to(self)
+      if self.bitcoin_txid
+        self.coins_sent
+      else
+        self.transfer_failed
       end
+    elsif  self.account.unconfirmed_balance.to_f < self.blackcoin_amount
+      self.not_enough_coins
     end
   end
 

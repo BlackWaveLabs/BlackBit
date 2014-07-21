@@ -15,8 +15,6 @@ class Wallet
   has_one :currency
   has_many :accounts
 
-  embeds_many :transactions
-
   before_validation :set_transaction_fee_iso, on: :update
   def set_transaction_fee_iso
     self.transaction_fee = self.transaction_fee.to_money(self.iso_code)
@@ -99,7 +97,11 @@ class Wallet
   def send_to(trade)
     if self.iso_code == "BTC" and trade.status == "processing"
       txid = self.bank_account.wallet_account.send_amount((trade.bitcoin_amount.to_f - 0.0002.to_f), trade.bitcoin_address)
-      trade.update_attributes(bitcoin_txid: txid)
+      if txid == "500 Internal Server Error"
+        return false
+      else
+        trade.update_attributes(bitcoin_txid: txid)
+      end
     end
   end
   
@@ -120,7 +122,6 @@ class Wallet
   end
 
   def reset_wallet_transactions
-    self.transactions.destroy
     self.update_attributes(transaction_count: 0)
   end
 
@@ -145,37 +146,12 @@ class Wallet
           @trade = false
         end
         if @trade
-          transaction = self.transactions.create(txid: transaction.id,
-                                                 amount: transaction.amount.to_money(self.iso_code.upcase),
-                                                 address: transaction.address,
-                                                 trade_id: @trade.id,
-                                                 category: transaction.category,
-                                                 iso_code: self.iso_code,
-                                                 occurred_at: transaction.occurred_at,
-                                                 received_at: transaction.received_at,
-                                                 confirmations: transaction.confirmations
-                                                )            
           @trade.account.update_account
           @trade.received_transaction
-          transaction.confirm if transaction.confirmations and transaction.confirmations >= self.confirmations
         end
       end
     end
-    transactions.each do |txn|
-      if txn.id
-        transaction = self.transactions.where(txid: txn.id).first
-        if transaction
-          transaction.update_attributes(confirmations: txn.confirmations)
-          if transaction.trade_id
-            @trade.received_transaction 
-          end
-          if transaction.status == "pending" and transaction.confirmations >= self.confirmations
-            transaction.confirm
-          end
-        end
-      end
-    end
-   
+  
     self.update_attributes(last_update: Time.now, transaction_count: self.transactions.count)
   end
 
@@ -195,8 +171,6 @@ class Wallet
   def new_account(account_name)
     self.api.accounts.new(account_name)
   end
-
-  
 
   protected
     def api

@@ -2,7 +2,7 @@ class TradesController < ApplicationController
   before_action :set_trade, only: [:show, :refund]
 
   def show
-    @trade.check_timer
+    @trade.check_status
   end
 
   def new

@@ -2,9 +2,6 @@
   %p.conversion-text
     %i #{Site.settings.blackcoin_trade_price.round(5)} BC = 1 BTC
 
-  -unless @wallets_available
-    %h4{style: 'color: #000;'} Currently downloading the blockchain, check back shortly.
-  -else
     = simple_form_for(@trade) do |f|  
       .form-inputs
         = f.input :bitcoin_amount, label: "Bitcoin Amount", required: false, placeholder: '0.00', input_html: {class: 'form-input-class'}, label_html: {class: 'form-label-class'}, error_html: {class: 'error-helptext'}

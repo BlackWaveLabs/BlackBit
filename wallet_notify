@@ -1,3 +1,6 @@
-#!/usr/local/rvm/rubies/ruby-2.1.2/bin/ruby
+#!/usr/bin/env ruby
+
 require 'sidekiq'
 Sidekiq::Client.push('queue' => 'default', 'class' => 'SiteWorker', 'args' => [])
+
+system "echo Initiated wallet update."
