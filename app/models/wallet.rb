@@ -39,6 +39,23 @@ class Wallet
     self.transaction_fee = Money.new(0, self.iso_code)
     self.save
   end
+
+  # Will need to find third parties to get block counts from
+  def blockchain_downloaded?
+    if self.iso_code == "BTC"
+       if self.api.blockcount < 311778
+         return false
+       else
+         return true
+       end
+    elsif self.iso_code == "BC"
+      if self.api.blockcount < 292894
+        return false
+      else
+        return true
+      end
+    end
+  end
   
   def self.bitcoin
     Wallet.where(iso_code: 'BTC').first
@@ -178,6 +195,8 @@ class Wallet
   def new_account(account_name)
     self.api.accounts.new(account_name)
   end
+
+  
 
   protected
     def api
