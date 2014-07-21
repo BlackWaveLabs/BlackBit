@@ -65,10 +65,10 @@ class Trade
     end
   end
   
-  def check_timer
+  def check_status
     if (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
-      if self.account.unconfirmed_balance > 0
-        self.received_transaction
+      if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount and self.account.transaction.created_at > (self.initiated_at + Site.settings.minutes_to_complete.minutes)
+        self.complete_trade
       else
         self.time_ran_out
       end
@@ -96,24 +96,32 @@ class Trade
   end
 
   def received_transaction
-    if self.status == "pending" and (self.initiated_at + Site.settings.minutes_to_complete.minutes) > Time.now
-      if self.account.transaction.confirmations >= self.account.wallet.confirmations
-        if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount  
-          self.coins_received
-          Wallet.bitcoin.send_to(self)
-          if self.bitcoin_txid
-            self.coins_sent
-          else
-            self.transfer_failed
-          end
-        elsif  self.account.unconfirmed_balance.to_f < self.blackcoin_amount
-          self.not_enough_coins
-        end
-      end
-    elsif self.status == "cancelled" and self.account.unconfirmed_balance > 0 and (self.initiated_at + Site.settings.minutes_to_complete.minutes) > Time.now
+    if self.status == "pending"
+      self.complete_trade
+    elsif self.status == "cancelled" and self.account.unconfirmed_balance > 0
       self.transfer_late
     elsif (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
-      self.time_ran_out
+      if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount and self.account.transaction.created_at > (self.initiated_at + Site.settings.minutes_to_complete.minutes)
+        self.complete_trade
+      else
+        self.time_ran_out
+      end
+    end
+  end
+
+  def complete_trade
+    if self.account.transaction.confirmations >= self.account.wallet.confirmations
+      if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount
+        self.coins_received
+        Wallet.bitcoin.send_to(self)
+        if self.bitcoin_txid
+          self.coins_sent
+        else
+          self.transfer_failed
+        end
+      elsif  self.account.unconfirmed_balance.to_f < self.blackcoin_amount
+        self.not_enough_coins
+      end
     end
   end
 

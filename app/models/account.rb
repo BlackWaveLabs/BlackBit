@@ -19,7 +19,7 @@ class Account
   belongs_to :trade
   embeds_many :transactions
 
-  validates_uniqueness_of :name,     message: "Unique name required."
+  validates_uniqueness_of :name, message: "Name must be unique."
   validates_presence_of :wallet_id,  message: "Wallet ID required."
 
   def trade
@@ -65,10 +65,6 @@ class Account
 
   def wallet_account
     account = self.wallet.account_by_name(self.name)
-    if account.nil?
-      self.user.reinitialize_accounts
-      account = self.wallet.account_by_name(self.name)
-    end
     return account
   end
 
