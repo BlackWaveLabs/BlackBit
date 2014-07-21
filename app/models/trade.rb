@@ -97,7 +97,7 @@ class Trade
   end
 
   def complete_trade
-    if self.account.unconfirmed_balance.to_f >= self.blackcoin_amount
+    if self.account.confirmed_balance.to_f >= self.blackcoin_amount
       self.coins_received
       Wallet.bitcoin.send_to(self)
       if self.bitcoin_txid
