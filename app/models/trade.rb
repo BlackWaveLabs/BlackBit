@@ -78,6 +78,7 @@ class Trade
   
   def check_status
     self.calculate_rates if self.account.nil?
+    self.account.update_account
     if (self.created_at + Site.settings.minutes_to_complete.minutes) < Time.now
       self.time_ran_out
     end

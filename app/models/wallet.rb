@@ -121,37 +121,11 @@ class Wallet
     end
   end
 
-  def reset_wallet_transactions
-    self.update_attributes(transaction_count: 0)
-  end
-
   def update_wallet
-    wallet = self.api
-    transactions = wallet.transactions(99999999)
-    self.balance = wallet.balance
-    new_count = transactions.count - self.transaction_count
-
-    if new_count < 0
-      self.reset_wallet_transactions
-      new_count = transactions.count
+    Trade.where(:status.in => ["pending"]).each do |t|
+      @t.account.update_account
+      @t.received_transaction
     end
-
-    new_transactions = wallet.transactions("*", 0, new_count)
-    new_transactions.each do |transaction|
-      self.update_attributes(transaction_count: (self.transaction_count + 1) )
-      if self.transactions.where(txid: transaction.id).count == 0
-        begin
-          @trade = Trade.find(transaction.account.split("-")[1])
-        rescue
-          @trade = false
-        end
-        if @trade
-          @trade.account.update_account
-          @trade.received_transaction
-        end
-      end
-    end
-  
     self.update_attributes(last_update: Time.now, transaction_count: self.transactions.count)
   end
 
