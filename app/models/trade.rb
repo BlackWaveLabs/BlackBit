@@ -79,7 +79,7 @@ class Trade
   def check_status
     self.calculate_rates if self.account.nil?
     self.account.update_account
-    if (self.created_at + Site.settings.minutes_to_complete.minutes) < Time.now
+    if (self.created_at + Site.settings.minutes_to_complete.minutes) < Time.now.utc
       self.time_ran_out
     end
     if self.status == "cancelled" and self.account.unconfirmed_balance > 0
@@ -92,7 +92,7 @@ class Trade
       self.complete_trade
     elsif self.status == "cancelled" and self.account.unconfirmed_balance > 0
       self.transfer_late
-    elsif (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
+    elsif (self.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now.utc
       self.time_ran_out
     end
   end

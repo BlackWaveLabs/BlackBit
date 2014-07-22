@@ -31,7 +31,7 @@
     -if @trade.status == "pending" or @trade.status == "processing" or @trade.status == "failed"
       %h3.white
         %b Timer
-      -if (@trade.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now
+      -if (@trade.initiated_at + Site.settings.minutes_to_complete.minutes) < Time.now.utc
         %h4.white Time ended
       -else
         %h4.white= distance_of_time_in_words_to_now(@trade.initiated_at + Site.settings.minutes_to_complete.minutes) + " remaining"
